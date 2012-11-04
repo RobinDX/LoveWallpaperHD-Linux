@@ -38,16 +38,16 @@ class Manager:
     	if sys.platform in ('mac', 'darwin'):
             return "Mac"
         
-	#判断桌面环境
-    	plaform = os.environ.get("DESKTOP_SESSION")
-    	if plaform == "gnome":
-	    return "Gnome"
-	elif plaform == "kde-plasma":
-	    return "KDE"
-	elif plaform == "xfce4":
-	    return "XFCE"
-	else:
-	   return "Gnome-shell"
+        #判断桌面环境
+        plaform = os.environ.get("DESKTOP_SESSION")
+        if plaform == "gnome":
+            return "Gnome"
+        elif plaform == "kde-plasma":
+            return "KDE"
+        elif plaform == "xfce4":
+            return "XFCE"
+        else:
+            return "Gnome-shell"
 
     def loadPlugin(self, platform):
 
@@ -83,6 +83,14 @@ class Manager:
         self.usr_home = os.path.expanduser('~') + "/.config/lovewallpaper"
         self._cf.read("%s/config"%(self.usr_home))
         self.download_path = self._cf.get("Path", "Download") 
+
+        #判断下载目录是否存在
+        if not os.path.exists(self.download_path):
+            os.makedirs(self.download_path)
+
+        #重新判断所在平台
+	    self.palform = self.getPlatform()
+        self.loadPlugin(self.palform)
 
     def download(self,key,url):
         """docstring for download"""
