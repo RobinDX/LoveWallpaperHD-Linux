@@ -318,8 +318,8 @@ class LoveWallpaper(QMainWindow):
 
         try:
             #初始化桌面参数
-            self.My_JsonMan = JsonMan(self.app.desktop().screenGeometry().width(),
-                    self.app.desktop().screenGeometry().height(),self)
+            self.My_JsonMan = JsonMan(self.app.desktop().screenGeometry().width(), 
+	    self.app.desktop().screenGeometry().height(),self)
             
             #获取返回信息
             self.My_JsonMan.get_json()

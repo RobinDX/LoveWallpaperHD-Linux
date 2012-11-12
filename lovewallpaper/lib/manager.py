@@ -3,6 +3,7 @@ import ConfigParser
 import urllib2
 import os
 import sys
+import commands
 try:
     import pynotify
 except:
@@ -37,23 +38,31 @@ class Manager:
     	#判断MacOS
     	if sys.platform in ('mac', 'darwin'):
             return "Mac"
-        
-        #判断桌面环境
-        plaform = os.environ.get("DESKTOP_SESSION")
-        if plaform == "gnome":
-            return "Gnome"
-        elif plaform == "kde-plasma":
-            return "KDE"
-        elif plaform == "xfce4":
-            return "XFCE"
-        else:
-            return "Gnome-shell"
+	#判断桌面环境
+	if not self.get_output("plasma-desktop"):
+	    return "KDE"
+	if not self.get_output("gnome-panel") and os.environ.get("DESKTOP_SESSION") == "gnome":
+	    return "Gnome"
+	if not self.get_output("xfce4-panel"):
+	    return "XFCE"
+	if not self.get_output("mate-panel"):
+	    return "MATE"
+	if not self.get_output("lxpanel"):
+	    return "LXDE"
+	
+    	return "GnomeShell"
+	   
+    def get_output(self, cmd):
+    	status, output = commands.getstatusoutput("ps -A | grep %s" %cmd)
+    	return status
+
 
     def loadPlugin(self, platform):
-
+	print "桌面环境：%s" %platform
+	
         if platform == "KDE":
             from Plugin.KDE import WallpaperSetter, AutoSlide
-        elif platform == "Gnome-shell":
+        elif platform == "GnomeShell":
             from Plugin.GnomeShell import WallpaperSetter, AutoSlide
         elif platform == "XFCE":
             from Plugin.Xfce import WallpaperSetter, AutoSlide
@@ -61,6 +70,10 @@ class Manager:
             from Plugin.Mac import WallpaperSetter, AutoSlide
         elif platform == "Gnome":
             from Plugin.Gnome import WallpaperSetter, AutoSlide
+	elif platform == "MATE":
+	    from Plugin.Mate import WallpaperSetter, AutoSlide
+	elif platform == "LXDE":
+	    from Plugin.LXDE import WallpaperSetter, AutoSlide
         else:
             try:
                     if os.environ['KDE_FULL_SESSION'] == 'true':
