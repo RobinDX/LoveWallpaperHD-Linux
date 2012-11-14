@@ -30,9 +30,9 @@ class Manager:
             self.palform =  self._cf.set('Config', 'platform', '')
             self._cf.write(open("%s/config" % (self.usr_home), "w"))
         
-  if not self.palform:
-      self.palform = self.getPlatform()
-        self.loadPlugin(self.palform)
+        if not self.palform:
+            self.palform = self.getPlatform()
+            self.loadPlugin(self.palform)
 
     def getPlatform(self):
     
@@ -75,7 +75,7 @@ class Manager:
           from Plugin.Mate import WallpaperSetter, AutoSlide
       elif platform == "LXDE":
           from Plugin.LXDE import WallpaperSetter, AutoSlide
-            else:
+      else:
                 try:
                         if os.environ['KDE_FULL_SESSION'] == 'true':
                             from Plugin.KDE import  WallpaperSetter, AutoSlide
@@ -90,8 +90,8 @@ class Manager:
                             except Exception, e:
                                  from Plugin.Gnome import WallpaperSetter, AutoSlide
                     # print self.download_path
-            self.Setter = WallpaperSetter()
-            self.AutoSlider = AutoSlide()
+        self.Setter = WallpaperSetter()
+        self.AutoSlider = AutoSlide()
 
     def _reload(self):
         self.usr_home = os.path.expanduser('~') + "/.config/lovewallpaper"
@@ -103,7 +103,7 @@ class Manager:
             os.makedirs(self.download_path)
 
         #重新判断所在平台
-      self.palform = self.getPlatform()
+        self.palform = self.getPlatform()
         self.loadPlugin(self.palform)
 
     def download(self,key,url):
