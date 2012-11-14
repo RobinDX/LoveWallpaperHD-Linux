@@ -30,68 +30,68 @@ class Manager:
             self.palform =  self._cf.set('Config', 'platform', '')
             self._cf.write(open("%s/config" % (self.usr_home), "w"))
         
-	if not self.palform:
-	    self.palform = self.getPlatform()
+  if not self.palform:
+      self.palform = self.getPlatform()
         self.loadPlugin(self.palform)
 
     def getPlatform(self):
     
-    	#判断MacOS
-    	if sys.platform in ('mac', 'darwin'):
-            return "Mac"
-	#判断桌面环境
-	if not self.get_output("plasma-desktop"):
-	    return "KDE"
-	if not self.get_output("gnome-panel") and os.environ.get("DESKTOP_SESSION") == "gnome":
-	    return "Gnome"
-	if not self.get_output("xfce4-panel"):
-	    return "XFCE"
-	if not self.get_output("mate-panel"):
-	    return "MATE"
-	if not self.get_output("lxpanel"):
-	    return "LXDE"
-	
-    	return "GnomeShell"
-	   
+      #判断MacOS
+      if sys.platform in ('mac', 'darwin'):
+        return "Mac"
+      #判断桌面环境
+      if not self.get_output("plasma-desktop"):
+          return "KDE"
+      if not self.get_output("gnome-panel") and os.environ.get("DESKTOP_SESSION") == "gnome":
+          return "Gnome"
+      if not self.get_output("xfce4-panel"):
+          return "XFCE"
+      if not self.get_output("mate-panel"):
+          return "MATE"
+      if not self.get_output("lxpanel"):
+          return "LXDE"
+      
+      return "GnomeShell"
+     
     def get_output(self, cmd):
-    	status, output = commands.getstatusoutput("ps -A | grep %s" %cmd)
-    	return status
+      status, output = commands.getstatusoutput("ps -A | grep %s" %cmd)
+      return status
 
 
     def loadPlugin(self, platform):
-	print "桌面环境：%s" %platform
-	
-        if platform == "KDE":
-            from Plugin.KDE import WallpaperSetter, AutoSlide
-        elif platform == "GnomeShell":
-            from Plugin.GnomeShell import WallpaperSetter, AutoSlide
-        elif platform == "XFCE":
-            from Plugin.Xfce import WallpaperSetter, AutoSlide
-        elif platform == "Mac":
-            from Plugin.Mac import WallpaperSetter, AutoSlide
-        elif platform == "Gnome":
-            from Plugin.Gnome import WallpaperSetter, AutoSlide
-	elif platform == "MATE":
-	    from Plugin.Mate import WallpaperSetter, AutoSlide
-	elif platform == "LXDE":
-	    from Plugin.LXDE import WallpaperSetter, AutoSlide
-        else:
-            try:
-                    if os.environ['KDE_FULL_SESSION'] == 'true':
-                        from Plugin.KDE import  WallpaperSetter, AutoSlide
-            except Exception, e:
-                        try:
-                            if os.environ['XDG_CURRENT_DESKTOP'] == 'XFCE':
-                                from Plugin.Xfce import WallpaperSetter, AutoSlide
-                            elif  os.environ['XDG_CURRENT_DESKTOP'] == 'Pantheon':
-                                from Plugin.Gnome import WallpaperSetter, AutoSlide
-                            else:
-                                from Plugin.Gnome import WallpaperSetter, AutoSlide
-                        except Exception, e:
-                             from Plugin.Gnome import WallpaperSetter, AutoSlide
-                # print self.download_path
-        self.Setter = WallpaperSetter()
-        self.AutoSlider = AutoSlide()
+      print "桌面环境：%s" %platform
+
+            if platform == "KDE":
+                from Plugin.KDE import WallpaperSetter, AutoSlide
+            elif platform == "GnomeShell":
+                from Plugin.GnomeShell import WallpaperSetter, AutoSlide
+            elif platform == "XFCE":
+                from Plugin.Xfce import WallpaperSetter, AutoSlide
+            elif platform == "Mac":
+                from Plugin.Mac import WallpaperSetter, AutoSlide
+            elif platform == "Gnome":
+                from Plugin.Gnome import WallpaperSetter, AutoSlide
+      elif platform == "MATE":
+          from Plugin.Mate import WallpaperSetter, AutoSlide
+      elif platform == "LXDE":
+          from Plugin.LXDE import WallpaperSetter, AutoSlide
+            else:
+                try:
+                        if os.environ['KDE_FULL_SESSION'] == 'true':
+                            from Plugin.KDE import  WallpaperSetter, AutoSlide
+                except Exception, e:
+                            try:
+                                if os.environ['XDG_CURRENT_DESKTOP'] == 'XFCE':
+                                    from Plugin.Xfce import WallpaperSetter, AutoSlide
+                                elif  os.environ['XDG_CURRENT_DESKTOP'] == 'Pantheon':
+                                    from Plugin.Gnome import WallpaperSetter, AutoSlide
+                                else:
+                                    from Plugin.Gnome import WallpaperSetter, AutoSlide
+                            except Exception, e:
+                                 from Plugin.Gnome import WallpaperSetter, AutoSlide
+                    # print self.download_path
+            self.Setter = WallpaperSetter()
+            self.AutoSlider = AutoSlide()
 
     def _reload(self):
         self.usr_home = os.path.expanduser('~') + "/.config/lovewallpaper"
@@ -103,7 +103,7 @@ class Manager:
             os.makedirs(self.download_path)
 
         #重新判断所在平台
-	    self.palform = self.getPlatform()
+      self.palform = self.getPlatform()
         self.loadPlugin(self.palform)
 
     def download(self,key,url):
