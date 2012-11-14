@@ -1,3 +1,9 @@
+lovewallpaper (1.5.4-0) precise; urgency=low
+  * Add LXDE, MATE support
+  * Fixed Download folder missing bug
+ -- kevinzhow <kevinchou.c@gmail.com>  Tue, 13 Noc 2012 03:36:18 +0800
+
+
 lovewallpaper (1.5.3-0) precise; urgency=low
   * Merge StartOS Team patch about StartOS and KDE Support
   * Add plugin select list
