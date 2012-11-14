@@ -4,6 +4,7 @@ import urllib2
 import os
 import sys
 import commands
+import logging
 try:
     import pynotify
 except:
@@ -16,7 +17,7 @@ class Manager:
         try:
             pynotify.init("LoveWallpaperHD")
         except:
-            print "done"
+            print "model"
         #初始化读取    
         self._cf = ConfigParser.ConfigParser()
         self.usr_home = os.path.expanduser('~') + "/.config/lovewallpaper"
