@@ -3,7 +3,7 @@ from PySide.QtCore import QUrl
 from PySide.QtGui import *
 from PySide import QtDeclarative
 from lib.image_ctl import *
-
+from lib.datamodel import Picture
 
 class ImageFrom(QWidget):
         """docstring for ImageFrom"""
@@ -65,7 +65,6 @@ class ImageFrom(QWidget):
                 self.imagerc.setContextProperty('controller', self.image_controller)
 
                 self.imageview.setSource(QUrl('qrc:/UI/image.qml'))
-
                 # self.ImageLayout.addWidget(self.ImageBar)
                 self.ImageLayout.addWidget(self.imageview)
                 # self.ImageLayout.addWidget(self.image_btn_container)

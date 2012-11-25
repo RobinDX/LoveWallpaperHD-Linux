@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-#图片数据结构
+
+
+#图片数据结构]
 class Picture:
     def __init__(self,key,small,big,original,detail):
         self.key = key
@@ -10,9 +12,10 @@ class Picture:
 
 #图片详细信息数据
 
+
 class Detail:
     """docstring for Detail"""
-    def __init__(self, name, key, image, dlview,data, tags):
+    def __init__(self, name, key, image, dlview, data, tags):
         self.name = name
         self.key = key
         self.image = image

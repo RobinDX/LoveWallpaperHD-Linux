@@ -6,10 +6,8 @@ Rectangle{
 	color:"white"
 	anchors.fill:parent
 	focus: true
-	    Component.onCompleted: {
-       hideDetail.start()
-        
-        
+	Component.onCompleted: {
+       		hideDetail.start()
         }
 	Keys.onPressed: {
 

@@ -70,6 +70,7 @@ class ImageListController(QtCore.QObject):
         picture_clicked = PictureWrapper(Picture(key,small,big,original,detail))
 
         self.imageform.imagerc.setContextProperty('myimage', picture_clicked)
+
         self.imageform.image_controller.setIndex(myindex)
         self.imageform.image_controller.setList(self.mylist)
 

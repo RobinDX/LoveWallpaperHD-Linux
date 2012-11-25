@@ -10,11 +10,10 @@ try:
     import pynotify
 except:
     print "No model"
-    
+
 
 class ImageController(QtCore.QObject):
     showdetail = QtCore.Signal()
-                                                                               
 
     def __init__(self,window,rc,form,layout,backto):
         try:
@@ -76,16 +75,16 @@ class ImageController(QtCore.QObject):
     @QtCore.Slot(str)
     def puresetWallpaper(self, url):
         if self.manager.puresetWallpaper(url):
-            print "done"
+            print "Set down"
             try:
                 n = pynotify.Notification(" 爱壁纸HD", "设置完成啦")
                 n.show()
             except:
-                print "done"
+                print "Notify False"
 
     @QtCore.Slot(str)
     def deleteWallapper(self, url):
-        os.system( "rm %s "%(url))
+        os.system( "rm %s " % (url))
         self.go_back()
         self.window.userimage_clicked()
 

@@ -1,8 +1,7 @@
 #!/usr/bin/python2
 # -*- coding: utf-8 -*-
-from __future__ import division  
+from __future__ import division
 import sys
-
 import os
 from PySide.QtCore import *
 from PySide.QtGui import *
@@ -25,63 +24,61 @@ from UI.tagimagefrom import TagImageFrom
 from UI.imagefrom import ImageFrom
 from UI.ImageListView import ImageListView
 from UI.colunmform import ColumnFrom
-
 import resources_rc
 import ConfigParser
 
+
 class LoveWallpaper(QMainWindow):
-   
-    def __init__(self, parent=None,app=None):
+    def __init__(self, parent=None, app=None):
         super(LoveWallpaper, self).__init__(parent)
-        #设置标题
+        #Set app title
         self.app = app
         self.setWindowTitle(u"爱壁纸HD")
+        #Set the icon
         self.setWindowIcon(QIcon(":/source/notify.png"))
+        #Set the style for QToolbar and QLineEdit
         self.setStyleSheet("QMainWindow {background-color:white; } QToolBar {border-bottom:2px solid #b60400} QLineEdit{ border:2px solid #b60400 }")
+        #Get the config file
         CONFIG = os.path.expanduser('~') + "/.config/lovewallpaper/config"
+        #Get the splash config file
         TIME = os.path.expanduser('~') + "/.config/lovewallpaper/splash/timeset"
         cf = ConfigParser.ConfigParser()
-        
         cf.read(CONFIG)
-
+        #Set if it is offine
         self.ToOffine = False
-    
-
-        #获取UUID
-
+        #Make sure there is a download path
         homefolder = os.path.expanduser('~')
-       	if cf.get("Path", "download") == "":
-	  
-            cf.set("Path", "download", homefolder+'/Wallpaper/')
+        if cf.get("Path", "download") == "":
+            cf.set("Path", "download", homefolder + '/Wallpaper/')
             cf.write(open(CONFIG, "w"))
-
-        #设置默认窗口
-       
-
+        #Get the window wight and height
         width = int(self.app.desktop().screenGeometry().width() * 0.75)
         height = int(self.app.desktop().screenGeometry().height() * 0.75)
-        self.bili = height/width
+        #Get the bili of the window (OK i am a Chinese, so let's say it in pinyin)
+        self.bili = height / width
+        #Set the images for each line
         self.imagenum = 4
+        #Set the titles for category in each line
         self.titlenum = 2
-
         self.init_width = width
-
         self.setMinimumSize(QSize(width, height))
-        self.setIconSize(QSize(48,48))
+        self.setIconSize(QSize(48, 48))
         self.createToolBars()
         self.createActions()
         self.createToolBottons()
         #self.setUnifiedTitleAndToolBarOnMac(True)
+        #Mark if any of these below was created
         self.tryluck_created = False
-        self.tags_created  = False
+        self.tags_created = False
         self.everyday_created = False
         self.top_created = False
         self.special_created = False
         self.history_list = []
         self.nowview = ""
-        self.setContentsMargins(0,0,0,0)
 
+        self.setContentsMargins(0, 0, 0, 0)
 
+    #For the icon press effect
     def reseticon(self, target):
         if self.Home_actiton == target:
             self.Home_actiton.setIcon(QIcon(":/icons/home_act.png"))
@@ -113,24 +110,16 @@ class LoveWallpaper(QMainWindow):
         else:
             self.Settings_actiton.setIcon(QIcon(":/icons/more.png"))
 
-
     def createActions(self):
         #添加按钮动作
         self.Home_actiton = QAction(QIcon.fromTheme("new", QIcon(":/icons/home_act.png")), u"推荐",
                 self)
-
-
         self.Home_actiton.triggered.connect(self.home_clicked)
-
         self.Categroy_action = QAction(QIcon.fromTheme("new", QIcon(":/icons/list.png")), u"浏览",
                 self, triggered=self.category_clicked)
-
-
         self.Tryluck_actiton = QAction(QIcon.fromTheme("new", QIcon(":/icons/try.png")), u"手气",
                 self, triggered=self.tryluck_clicked)
-
         #self.Tryluck_actiton.setCheckable(True)
-
         self.My_wallpapers_actiton = QAction(QIcon.fromTheme("new", QIcon(":/icons/inbox.png")), u"本地",
                 self, triggered=self.userimage_clicked)
         self.Tags_actiton = QAction(QIcon.fromTheme("new", QIcon(":/icons/tags.png")), u"标签",
@@ -145,21 +134,10 @@ class LoveWallpaper(QMainWindow):
                 self, triggered=self.to_home)
         self.search_action = QAction(QIcon.fromTheme("new", QIcon(":/icons/search.png")), u"搜索",
                 self, triggered=self.do_search)
-        
 
-        # Category的Action
-        # self.Column_btn_actiton = QAction( u"分类",
-        #         self, triggered=self.category_clicked)
-        # self.Top_btn_actiton = QAction(u"排行",
-        #         self, triggered=self.Top_btn_clicked)
-        # self.Special_btn_actiton = QAction( u"专题",
-        #         self, triggered=self.Special_btn_clicked)
-        # self.Everyday_btn_actiton = QAction( u"每日",
-        #         self, triggered=self.everyday_clicked)
-    def resizeEvent(self,QResizeEvent):
-  
-
-        if self.width()  > 1300:
+    #For window resize
+    def resizeEvent(self, QResizeEvent):
+        if self.width() > 1300:
             print self.app.desktop().screenGeometry().width()
             self.imagenum = 5
             self.titlenum = 3
@@ -171,14 +149,10 @@ class LoveWallpaper(QMainWindow):
                 self.everydayrc.setContextProperty('imagenum', self.imagenum)
                 self.userlistview_rc.setContextProperty('imagenum', self.imagenum)
                 self.rc.setContextProperty('imagenum', self.imagenum)
-                
                 self.categoryrc.setContextProperty('titlenum', self.titlenum)
                 self.specialrc.setContextProperty('titlenum', self.titlenum)
             except Exception, e:
-                raise e
-
-
-            
+                print e
         if self.width() < 1300:
             print self.app.desktop().screenGeometry().width()
             self.imagenum = 4
@@ -191,83 +165,65 @@ class LoveWallpaper(QMainWindow):
                 self.everydayrc.setContextProperty('imagenum', self.imagenum)
                 self.userlistview_rc.setContextProperty('imagenum', self.imagenum)
                 self.rc.setContextProperty('imagenum', self.imagenum)
-                
                 self.categoryrc.setContextProperty('titlenum', self.titlenum)
                 self.specialrc.setContextProperty('titlenum', self.titlenum)
-
             except Exception, e:
-                raise e
+                print e
 
+    #When user clicked the Userimage label
     def userimage_clicked(self):
         self.reseticon(self.My_wallpapers_actiton)
-        self.userlistviewcontroller.setList(self.userlistviewcontroller.Prepare(),self.userlistview_rc)
+        self.userlistviewcontroller.setList(self.userlistviewcontroller.Prepare(), self.userlistview_rc)
         self.Layout.setCurrentWidget(self.userlistview)
 
     def settings_clicked(self):
         self.reseticon(self.Settings_actiton)
         self.Layout.setCurrentWidget(self.settingUI)
-        
 
     def to_home(self):
         self.MasterContainerLayout.setCurrentWidget(self.MasterBox)
 
-
     def return_to_Master_clicked(self):
-   
-       
-        self.Layout.setCurrentWidget(self.view)    
-
-
+        self.Layout.setCurrentWidget(self.view)
 
     def Special_btn_clicked(self):
-        
         if self.special_created:
             self.CategoryContainerLayout.setCurrentWidget(self.specialview)
         else:
-            self.speciallist  = self.My_JsonMan.Special()
-            self.specials  =  [SpecialWrapper(special) for special in self.speciallist]
+            self.speciallist = self.My_JsonMan.Special()
+            self.specials = [SpecialWrapper(special) for special in self.speciallist]
             self.special_model_list = SpecialListModel(self.specials)
             self.specialrc.setContextProperty("specials_model", self.special_model_list)
             self.special_created = True
             self.CategoryContainerLayout.setCurrentWidget(self.specialview)
-            
-            
+
     def Top_btn_clicked(self):
         if self.top_created:
             self.toplistviewcontroller.setList(self.toplist.data)
             self.toplistviewcontroller.setLinks(self.toplist.link)
             self.CategoryContainerLayout.setCurrentWidget(self.toplistview)
         else:
-            self.toplist  = self.My_JsonMan.getTop()
+            self.toplist = self.My_JsonMan.getTop()
             self.toplistviewcontroller.setList(self.toplist.data)
             self.toplistviewcontroller.setLinks(self.toplist.link)
             self.top_created = True
             self.CategoryContainerLayout.setCurrentWidget(self.toplistview)
-            
-        
-        
+
     def everyday_clicked(self):
-
-
         if self.everyday_created:
             self.CategoryContainerLayout.setCurrentWidget(self.everydayview)
         else:
-
             self.everyday_list = self.My_JsonMan.Everyday()
             self.everydays = [EverydayWrapper(every) for every in self.everyday_list]
             self.everydays_model_list = EverydayListModel(self.everydays)
             self.everydayrc.setContextProperty('everymodel', self.everydays_model_list)
-
             self.everyday_created = True
             self.CategoryContainerLayout.setCurrentWidget(self.everydayview)
-
-        
 
     def category_clicked(self):
         self.reseticon(self.Categroy_action)
         self.Layout.setCurrentWidget(self.CategoryBox)
         self.CategoryContainerLayout.setCurrentWidget(self.categoryview)
-        
 
     def tags_clicked(self):
         self.reseticon(self.Tags_actiton)
@@ -275,7 +231,6 @@ class LoveWallpaper(QMainWindow):
         if self.tags_created:
             self.Layout.setCurrentWidget(self.tagsview)
         else:
-
             self.tags_list = self.My_JsonMan.create_tags()
             self.tags_texts = [TagWrapper(text) for text in self.tags_list]
             self.tags_texts_list = TagListModel(self.tags_texts)
@@ -284,43 +239,31 @@ class LoveWallpaper(QMainWindow):
             self.tags_created = True
             self.Layout.setCurrentWidget(self.tagsview)
 
-        
-
     @QtCore.Slot()
     def home_clicked(self):
-
         self.reseticon(self.Home_actiton)
         self.Layout.setCurrentWidget(self.view)
-
 
     def tryluck_clicked(self):
         self.reseticon(self.Tryluck_actiton)
 
         if self.tryluck_created:
-
             self.Layout.setCurrentWidget(self.trylucklistview)
-
         else:
             self.tryluck_list = self.My_JsonMan.create_tryluck()
             self.tryluck_images = [PictureWrapper(tryluck_thing) for tryluck_thing in self.tryluck_list]
-
             self.trylcuklistviewcontroller.setList(self.tryluck_images)
-
             self.tryluck_imageList = PhotoListModel(self.tryluck_images)
             self.trylucklistview_rc.setContextProperty('datamodel', self.tryluck_imageList)
             self.tryluck_created = True
             self.Layout.setCurrentWidget(self.trylucklistview)
-            
-
-
 
     def create_view(self):
-
         try:
             #初始化桌面参数
-            self.My_JsonMan = JsonMan(self.app.desktop().screenGeometry().width(), 
-	    self.app.desktop().screenGeometry().height(),self)
-            
+            self.My_JsonMan = JsonMan(self.app.desktop().screenGeometry().width(),
+                self.app.desktop().screenGeometry().height(), self)
+
             #获取返回信息
             self.My_JsonMan.get_json()
             self.mylist = self.My_JsonMan.rate_list
@@ -334,6 +277,7 @@ class LoveWallpaper(QMainWindow):
             self.categoryes_list = CategoryListModel(self.categoryes)
         except Exception, e:
             print "No Network"
+            print e
             self.ToOffine = True
             self.images = []
             self.imageList = []
@@ -342,70 +286,50 @@ class LoveWallpaper(QMainWindow):
             self.category_list = []
             self.mylist = []
 
-        
         #布局UI
-
-
         self.MasterContainer = QWidget()
-        self.MasterContainer.setContentsMargins(0,0,0,0)
-        
+        self.MasterContainer.setContentsMargins(0, 0, 0, 0)
         self.MasterContainerLayout = QStackedLayout()
         self.MasterContainerLayout.setSpacing(0)
         self.MasterContainer.setLayout(self.MasterContainerLayout)
-        self.MasterContainerLayout.setContentsMargins(0,0,0,0)
-
-
+        self.MasterContainerLayout.setContentsMargins(0, 0, 0, 0)
         #顶级目录
         self.MasterBox = QWidget()
-        self.MasterBox.setContentsMargins(0,0,0,0)
+        self.MasterBox.setContentsMargins(0, 0, 0, 0)
         self.MasterBoxLayout = QVBoxLayout()
         self.MasterBoxLayout.setSpacing(0)
-        self.MasterBoxLayout.setContentsMargins(0,0,0,0)
+        self.MasterBoxLayout.setContentsMargins(0, 0, 0, 0)
         self.MasterBox.setLayout(self.MasterBoxLayout)
         self.MasterBoxLayout.addWidget(self.ToolBar)
-
         self.LayoutContainer = QWidget()
         self.Layout = QStackedLayout()
         self.Layout.setSpacing(0)
         self.LayoutContainer.setLayout(self.Layout)
-        self.LayoutContainer.setContentsMargins(0,0,0,0)
-        
+        self.LayoutContainer.setContentsMargins(0, 0, 0, 0)
         #Category级目录
         self.BrowserContainer = QWidget()
         self.BrowserLayout = QVBoxLayout()
         self.BrowserLayout.setSpacing(0)
-        self.BrowserLayout.setContentsMargins(0,0,0,0)
+        self.BrowserLayout.setContentsMargins(0, 0, 0, 0)
         self.BrowserContainer.setLayout(self.BrowserLayout)
-        self.BrowserContainer.setContentsMargins(0,0,0,0)
-
+        self.BrowserContainer.setContentsMargins(0, 0, 0, 0)
         self.CategoryContainer = QWidget()
-        self.CategoryContainer.setContentsMargins(0,0,0,0)
+        self.CategoryContainer.setContentsMargins(0, 0, 0, 0)
         self.CategoryContainerLayout = QStackedLayout()
         self.CategoryContainer.setLayout(self.CategoryContainerLayout)
-        self.CategoryContainerLayout.setContentsMargins(0,0,0,0)  
-
-
+        self.CategoryContainerLayout.setContentsMargins(0, 0, 0, 0)
         self.CategoryBox = QWidget()
         self.CategoryBoxLayout = QStackedLayout()
         self.CategoryBox.setLayout(self.CategoryBoxLayout)
-
-        
-
-
-
         self.view = QtDeclarative.QDeclarativeView()
         self.view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
-
-        
         self.rc = self.view.rootContext()
         self.controller = Controller(self, self.images)
         self.rc.setContextProperty('controller', self.controller)
-
         self.rc.setContextProperty('datamodel', self.imageList)
         self.rc.setContextProperty('bili', self.bili)
         self.rc.setContextProperty('imagenum', self.imagenum)
         self.view.setSource(QUrl('qrc:/UI/imagelist.qml'))
-
         self.createImageWindowUI_For_Category()
         self.createTopWindowUI()
         self.createImageWindowUI()
@@ -415,7 +339,6 @@ class LoveWallpaper(QMainWindow):
         self.createCategoryUI()
         self.createTagsUI()
         self.createTagsImageListView()
-
         self.createImageListViewUI()
         self.createEverydayViewUI()
         self.createSpecialViewUI()
@@ -423,16 +346,12 @@ class LoveWallpaper(QMainWindow):
         self.createSearchResultViewUI()
         self.createMaserPageViewUI()
         self.createUserImageView()
-
         self.createTryLuckViewUI()
         self.createDetailImageListView()
         self.MasterBoxLayout.addWidget(self.LayoutContainer)
-        
         # self.BrowserLayout.addWidget(self.CategoryBar)
         self.BrowserLayout.addWidget(self.CategoryContainer)
-
         self.CategoryBoxLayout.insertWidget(0, self.BrowserContainer)
-
         self.createImageWindowUI_For_Clounm()
         self.createImageWindowUI_For_Clounm_2nd()
         self.createColunmView()
@@ -440,17 +359,11 @@ class LoveWallpaper(QMainWindow):
         self.createSettingsUI()
         self.createETWindowUI()
         self.createCategoryImageListView()
-
-        
-
-
-        self.Layout.insertWidget(0,self.view)
-        self.Layout.setContentsMargins(0,0,0,0)
+        self.Layout.insertWidget(0, self.view)
+        self.Layout.setContentsMargins(0, 0, 0, 0)
         self.Layout.setCurrentWidget(self.view)
-
-        self.MasterContainerLayout.insertWidget(0,self.MasterBox)
-        self.Layout.insertWidget(1,self.CategoryBox)
-
+        self.MasterContainerLayout.insertWidget(0, self.MasterBox)
+        self.Layout.insertWidget(1, self.CategoryBox)
         self.Layout.setCurrentWidget(self.view)
         self.CategoryBoxLayout.setCurrentWidget(self.BrowserContainer)
         self.MasterContainerLayout.setCurrentWidget(self.MasterBox)
@@ -459,59 +372,50 @@ class LoveWallpaper(QMainWindow):
     def createUserImageView(self):
         self.userlistview = QtDeclarative.QDeclarativeView()
         self.userlistview.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
-
         self.userlistview_rc = self.userlistview.rootContext()
-        self.userlistviewcontroller = UserImageController(self,self.MasterContainerLayout, self.UserImageLayoutContainer)
+        self.userlistviewcontroller = UserImageController(self, self.MasterContainerLayout, self.UserImageLayoutContainer)
         self.userlistview_rc.setContextProperty('controller', self.userlistviewcontroller)
         self.userlistview_rc.setContextProperty('bili', self.bili)
         self.userlistview_rc.setContextProperty('imagenum', self.imagenum)
         self.userlistview.setSource(QUrl('qrc:/UI/userimagelist.qml'))
-        self.Layout.insertWidget(9,self.userlistview)
+        self.Layout.insertWidget(9, self.userlistview)
 
     def createSettingsUI(self):
         self.settingUI = SettingUI()
-        
-        self.Layout.insertWidget(7,self.settingUI)
-
-
+        self.Layout.insertWidget(7, self.settingUI)
 
     def createColunmView(self):
-        
-        self.ColunmView  = ColumnFrom(self, self.MasterContainerLayout, self.MasterBox, self.clounm_ImageContainer)
-        self.MasterContainerLayout.insertWidget(4,self.ColunmView)
+        self.ColunmView = ColumnFrom(self, self.MasterContainerLayout, self.MasterBox, self.clounm_ImageContainer)
+        self.MasterContainerLayout.insertWidget(4, self.ColunmView)
         self.clounm_ImageContainer.setBackToView(self.ColunmView)
-    
+
     def createColunmView_2nd(self):
-        
-        self.ColunmView_2nd  = ColumnFrom(self, self.MasterContainerLayout, self.ColunmView, self.clounm_2nd_ImageContainer)
-        self.MasterContainerLayout.insertWidget(5,self.ColunmView_2nd)
+        self.ColunmView_2nd = ColumnFrom(self, self.MasterContainerLayout, self.ColunmView, self.clounm_2nd_ImageContainer)
+        self.MasterContainerLayout.insertWidget(5, self.ColunmView_2nd)
         self.clounm_2nd_ImageContainer.setBackToView(self.ColunmView_2nd)
-    
+
     def createTagsImageListView(self):
-         self.tag_imagelistview = ImageListView(self, self.MasterContainerLayout, self.TagImageLayoutContainer, self.MasterBox )
-         self.MasterContainerLayout.insertWidget(5, self.tag_imagelistview)
+        self.tag_imagelistview = ImageListView(self, self.MasterContainerLayout, self.TagImageLayoutContainer, self.MasterBox)
+        self.MasterContainerLayout.insertWidget(5, self.tag_imagelistview)
 
     def createDetailImageListView(self):
-         self.tag_detailimagelistview = ImageListView(self, self.MasterContainerLayout, self.Imagedetail_LayoutContainer, self.MasterBox )
-         self.MasterContainerLayout.insertWidget(5, self.tag_detailimagelistview)
+        self.tag_detailimagelistview = ImageListView(self, self.MasterContainerLayout, self.Imagedetail_LayoutContainer, self.MasterBox)
+        self.MasterContainerLayout.insertWidget(5, self.tag_detailimagelistview)
 
     def createCategoryImageListView(self):
-         self.category_imagelistview = ImageListView(self, self.MasterContainerLayout, self.ETImageContainer, self.MasterBox )
-         self.ETImageContainer.setBackToView(self.category_imagelistview)
-         self.MasterContainerLayout.insertWidget(5, self.category_imagelistview)
+        self.category_imagelistview = ImageListView(self, self.MasterContainerLayout, self.ETImageContainer, self.MasterBox)
+        self.ETImageContainer.setBackToView(self.category_imagelistview)
+        self.MasterContainerLayout.insertWidget(5, self.category_imagelistview)
 
     def createSearchResultViewUI(self):
         self.searchview = QtDeclarative.QDeclarativeView()
         self.searchview.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
-
         self.searchrc = self.searchview.rootContext()
         self.searchcontroller = TagsController(self)
         self.searchrc.setContextProperty('controller', self.searchcontroller)
- 
 
         self.searchview.setSource(QUrl('qrc:/UI/search_result.qml'))
-        self.Layout.insertWidget(6,self.searchview)
-        
+        self.Layout.insertWidget(6, self.searchview)
 
     def createSpecialViewUI(self):
         self.specialview = QtDeclarative.QDeclarativeView()

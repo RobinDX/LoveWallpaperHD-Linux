@@ -12,6 +12,7 @@ try:
 except:
     print "No model"
 
+
 #Define the ListModel
 class DataModel (QAbstractListModel):
     """docstring for ClassName"""
