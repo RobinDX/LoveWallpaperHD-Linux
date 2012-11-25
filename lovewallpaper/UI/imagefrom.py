@@ -3,7 +3,10 @@ from PySide.QtCore import QUrl
 from PySide.QtGui import *
 from PySide import QtDeclarative
 from lib.image_ctl import *
-from lib.datamodel import Picture
+from lib.datamodel import Picture, Tag
+from lib.wapper import PictureWrapper, TagWrapper, TagListModel
+
+
 
 class ImageFrom(QWidget):
         """docstring for ImageFrom"""
@@ -25,6 +28,7 @@ class ImageFrom(QWidget):
                 # self.ImageBar = QToolBar("ImageToolBar")
                 # self.ImageBar.setFloatable(False)
                 # self.ImageBar.setMovable(False)
+
 
 
                 # self.return_action = QAction(QIcon.fromTheme("new", QIcon(":/icons/return.png")), u"返回",
@@ -63,8 +67,15 @@ class ImageFrom(QWidget):
                 self.imagerc = self.imageview.rootContext()
                 self.image_controller = ImageController(window,self.imagerc,self,self.father_layout,self.backto)
                 self.imagerc.setContextProperty('controller', self.image_controller)
+                self.imagerc.setContextProperty('tagsmodel', TagListModel([]))
+                self.imagerc.setContextProperty('kvmodel',[])
+                self.imagerc.setContextProperty('detailtitle',"x")
+                x = "http://www.baidu.com/img/baidu_sylogo1.gif" 
+                self.imagerc.setContextProperty('myimage', PictureWrapper( Picture("12212",
+                 x, x, x, "http://www.lovebizhi.com")) )
 
                 self.imageview.setSource(QUrl('qrc:/UI/image.qml'))
+                
                 # self.ImageLayout.addWidget(self.ImageBar)
                 self.ImageLayout.addWidget(self.imageview)
                 # self.ImageLayout.addWidget(self.image_btn_container)
