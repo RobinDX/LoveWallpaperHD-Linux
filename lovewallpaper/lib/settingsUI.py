@@ -77,7 +77,7 @@ class SettingUI(QWidget, Ui_Settings):
 
         self.path_line.setText(text.decode('utf-8'))
 
-        self.platform_list = ["GnomeShell", "KDE", "XFCE", "Mac", "Gnome", "MATE", "LXDE"]
+        self.platform_list = ["Unity/GnomeShell", "KDE", "XFCE", "Mac", "Gnome", "MATE", "LXDE"]
 
         self.platform_model = DataModel(self.platform_list)
 
@@ -87,6 +87,8 @@ class SettingUI(QWidget, Ui_Settings):
 
     def selectPaltForm(self, indexes):
         platform = self.platform_list[indexes.row()]
+        if platform == "Unity/GnomeShell":
+            platform = "GnomeShell"
         self.cf.set("Config", "platform", platform)
         self.cf.write(open("%s/config" % (self.usr_home), "w"))
         try:

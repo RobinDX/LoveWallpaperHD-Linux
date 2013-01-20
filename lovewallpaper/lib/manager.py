@@ -4,6 +4,7 @@ import urllib2
 import os
 import sys
 import commands
+from lib.VERSION import __VERSION__
 try:
     import pynotify
 except:
@@ -114,7 +115,11 @@ class Manager:
             # print self.download_path+key+".jpg"
             #创建下载
             f = open(self.download_path+key+".jpg",'wb')
-            f.write(urllib2.urlopen(url,timeout=15).read())
+            print "Begin download"
+            opener = urllib2.build_opener()
+            opener.addheaders = [('User-agent', 'LovewallpaperLinux/'+__VERSION__)]
+            response = opener.open(url)
+            f.write(response.read())
             f.close()
             return True
         except Exception, e:
