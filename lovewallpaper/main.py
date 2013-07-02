@@ -52,8 +52,8 @@ class LoveWallpaper(QMainWindow):
             cf.set("Path", "download", homefolder + '/Wallpaper/')
             cf.write(open(CONFIG, "w"))
         #Get the window wight and height
-        width = int(self.app.desktop().screenGeometry().width() * 0.75)
-        height = int(self.app.desktop().screenGeometry().height() * 0.75)
+        width = int(self.app.desktop().screenGeometry(self).width() * 0.75)
+        height = int(self.app.desktop().screenGeometry(self).height() * 0.75)
         #Get the bili of the window (OK i am a Chinese, so let's say it in pinyin)
         self.bili = height / width
         #Set the images for each line
@@ -261,8 +261,8 @@ class LoveWallpaper(QMainWindow):
     def create_view(self):
         try:
             #初始化桌面参数
-            self.My_JsonMan = JsonMan(self.app.desktop().screenGeometry().width(),
-                self.app.desktop().screenGeometry().height(), self)
+            self.My_JsonMan = JsonMan(self.app.desktop().screenGeometry(self).width(),
+                self.app.desktop().screenGeometry(self).height(), self)
 
             #获取返回信息
             self.My_JsonMan.get_json()
